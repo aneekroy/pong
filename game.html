@@ -1,0 +1,79 @@
+<canvas id = "gc" width = "800" height = "600"> </canvas>
+<script>
+userPlankYPosition =40;
+computerPlankYPosition = 40;
+plankWidth = 10;
+plankHeight =100;
+ballPositionX=400;
+ballPositionY=300;
+ballDimension =6;
+XVelocity=YVelocity=4;
+playerScore=ComputerScore=0;
+computerPlankSpeedinY=4;
+var canvas,canvasContext;
+	window.onload=function() {
+		canvas=document.getElementById('gc');
+		canvasContext=canvas.getContext('2d');
+		setInterval(update, 1000/30);
+		
+		canvas.addEventListener('mousemove',function(e){
+			userPlankYPosition = e.clientY-plankHeight/2;
+		});
+	};
+	function reset(){
+		ballPositionX=canvas.width/2;
+		ballPositionY=canvas.height/2;
+		XVelocity=10;
+		YVelocity=0;
+	};
+	function update(){
+		canvasContext.fillStyle='black';
+		canvasContext.fillRect(0,0,canvas.width,canvas.height);
+		canvasContext.fillStyle='white';
+		canvasContext.fillRect(0,userPlankYPosition,plankWidth,plankHeight);
+		canvasContext.fillRect(canvas.width-plankWidth,computerPlankYPosition,plankWidth,plankHeight);
+		canvasContext.fillRect(ballPositionX-ballDimension/2,ballPositionY-ballDimension/2,ballDimension,ballDimension);
+		canvasContext.fillText(playerScore,100,100);
+		canvasContext.fillText(ComputerScore,canvas.width-100,100);	
+		ballPositionX+=XVelocity;
+		ballPositionY+=YVelocity;
+		if(ballPositionY-ballDimension/2<0 && YVelocity <0){
+			YVelocity=-YVelocity;
+		}
+		if(ballPositionY+ballDimension/2>canvas.height && YVelocity <0){
+			YVelocity=-YVelocity;
+		}
+		if(ballPositionX-ballDimension/2<0 )
+		{
+			if(ballPositionY>userPlankYPosition && ballPositionY<userPlankYPosition+plankHeight){
+				XVelocity-=XVelocity;
+				dy=ballPositionY-(userPlankYPosition+plankHeight/2);
+				YVelocity = dy*0.3;
+			}
+			else{
+				ComputerScore++;
+				reset();
+			}
+		}
+		
+		if(ballPositionX+ballDimension/2>canvas.width )
+		{
+			if(ballPositionY>computerPlankYPosition && ballPositionY<computerPlankYPosition+plankHeight){
+				XVelocity-=XVelocity;
+				dy=ballPositionY-(computerPlankYPosition+plankHeight/2);
+				YVelocity = dy*0.3;
+			}
+			else{
+				playerScore++;
+				reset();
+			}
+		};
+		if(computerPlankYPosition+plankHeight/2<ballPositionY){
+			computerPlankYPosition+=computerPlankSpeedinY;
+		}
+		else{
+			computerPlankYPosition-=computerPlankSpeedinY;
+		}
+			
+	};
+</script>
